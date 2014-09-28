@@ -3,9 +3,12 @@ package main
 import "github.com/visionmedia/docopt"
 import "github.com/segmentio/go-log"
 import "net/http"
+import "net/url"
 import "fmt"
 import "encoding/json"
 import "bytes"
+import "io/ioutil"
+import "os"
 
 const Version = "0.0.1"
 
@@ -32,11 +35,13 @@ func main() {
 	}
 
 	name := args["<name>"].(string)
+	t := args["<type>"].(string)
 
 	if args["search"].(bool) {
 		// search api
+		api.Search(name, t)
 	} else if args["register"].(bool) {
-		api.Register(name, args["<url>"].(string), args["<type>"].(string))
+		api.Register(name, args["<url>"].(string), t)
 	}
 }
 
@@ -45,27 +50,36 @@ type Client struct {
 }
 
 func (c *Client) Search(name string, t string) {
-	j := map[string]string{
-		"name": name,
-	}
+	p := url.Values{}
+	p.Add("name", name)
+	p.Add("type", t)
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/packages", Api, t), jsonBytes(j))
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/types/%s/packages/search?%s", Api, t, p.Encode()), nil)
 	log.Check(err)
 
 	resp, err := c.http.Do(req)
 	log.Check(err)
 
 	fmt.Println(resp.Status)
-	fmt.Println(resp.Body)
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	log.Check(err)
+	var d interface{}
+	err = json.Unmarshal(body, &d)
+	log.Check(err)
+	b, err := json.MarshalIndent(d, "", "  ")
+	log.Check(err)
+	os.Stdout.Write(b)
 }
 
-func (c *Client) Register(name string, url string, t string) {
-	j := map[string]string{
-		"name": name,
-		"url":  url,
-	}
+func (c *Client) Register(name string, u string, t string) {
+	p := url.Values{}
+	p.Add("name", name)
+	p.Add("type", t)
+	p.Add("url", u)
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s/packages", Api, t), jsonBytes(j))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/types/%s/packages?%s", Api, t, p.Encode()), nil)
 	log.Check(err)
 
 	resp, err := c.http.Do(req)
