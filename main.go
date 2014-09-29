@@ -39,7 +39,6 @@ func main() {
 	t := args["<type>"].(string)
 
 	if args["search"].(bool) {
-		// search api
 		api.Search(name, t)
 	} else if args["register"].(bool) {
 		api.Register(name, args["<url>"].(string), t)
@@ -68,11 +67,14 @@ func (c *Client) Search(name string, t string) {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	log.Check(err)
+
 	var d interface{}
 	err = json.Unmarshal(body, &d)
 	log.Check(err)
+
 	b, err := json.MarshalIndent(d, "", "  ")
 	log.Check(err)
+
 	os.Stdout.Write(b)
 }
 
