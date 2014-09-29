@@ -16,11 +16,11 @@ const Api = "http://localhost:3000"
 
 const Usage = `
   Usage:
-   versions search <name> <type>
-   versions register <name> <type> <url>
-   versions unregister <name> <type>
-   versions -h | --help
-   versions --version
+   registry search <name> <type>
+   registry register <name> <type> <url>
+   registry unregister <name> <type>
+   registry -h | --help
+   registry --version
 
   Options:
     -h, --help       output help information
