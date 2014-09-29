@@ -18,6 +18,7 @@ const Usage = `
   Usage:
    versions search <name> <type>
    versions register <name> <type> <url>
+   versions unregister <name> <type>
    versions -h | --help
    versions --version
 
@@ -42,6 +43,8 @@ func main() {
 		api.Search(name, t)
 	} else if args["register"].(bool) {
 		api.Register(name, args["<url>"].(string), t)
+	} else if args["unregister"].(bool) {
+		api.Unregister(name, t)
 	}
 }
 
@@ -92,4 +95,14 @@ func jsonBytes(j map[string]string) *bytes.Buffer {
 	b, err := json.Marshal(j)
 	log.Check(err)
 	return bytes.NewBuffer(b)
+}
+
+func (c *Client) Unregister(name string, t string) {
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/types/%s/packages/%s", Api, t, name), nil)
+	log.Check(err)
+
+	resp, err := c.http.Do(req)
+	log.Check(err)
+
+	fmt.Println(resp.Status)
 }
