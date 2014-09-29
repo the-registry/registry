@@ -1,5 +1,5 @@
 {
-	"ImportPath": "versionsio/cli",
+	"ImportPath": "github.com/the-registry/cli",
 	"GoVersion": "go1.3.1",
 	"Deps": [
 		{
