@@ -20,5 +20,12 @@ $ registry register rubygem timecop https://github.com/travisjeffery/timecop.git
 > 201 Created
 
 $ register search rubygem timecop
->
+> 200 OK
+[
+  {
+    "name": "timecop",
+    "type": "rubygem",
+    "url": "https://github.com/travisjeffery/timecop.git"
+  }
+]
 ```
