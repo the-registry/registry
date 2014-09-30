@@ -16,9 +16,9 @@ const Api = "http://localhost:3000"
 
 const Usage = `
   Usage:
-   registry search <name> <type>
-   registry register <name> <type> <url>
-   registry unregister <name> <type>
+   registry search <type> <name>
+   registry register <type> <name> <url>
+   registry unregister <type> <name>
    registry -h | --help
    registry --version
 
