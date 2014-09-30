@@ -16,9 +16,9 @@ Options:
 ## Example
 
 ```
-$ registry register timecop rubygem https://github.com/travisjeffery/timecop.git
+$ registry register rubygem timecop https://github.com/travisjeffery/timecop.git
 > 201 Created
 
-$ register search timecop
+$ register search rubygem timecop
 >
 ```
