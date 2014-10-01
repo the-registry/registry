@@ -54,7 +54,6 @@ type Client struct {
 func (c *Client) Search(name string, t string) {
 	p := url.Values{}
 	p.Add("name", name)
-	p.Add("type", t)
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/types/%s/packages/search?%s", Api, t, p.Encode()), nil)
 	log.Check(err)
@@ -81,10 +80,19 @@ func (c *Client) Search(name string, t string) {
 func (c *Client) Register(name string, u string, t string) {
 	p := url.Values{}
 	p.Add("name", name)
-	p.Add("type", t)
 	p.Add("url", u)
 
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/types/%s/packages?%s", Api, t, p.Encode()), nil)
+	log.Check(err)
+
+	resp, err := c.http.Do(req)
+	log.Check(err)
+
+	fmt.Println(resp.Status)
+}
+
+func (c *Client) Unregister(name string, t string) {
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/types/%s/packages/%s", Api, t, name), nil)
 	log.Check(err)
 
 	resp, err := c.http.Do(req)
@@ -97,14 +105,4 @@ func jsonBytes(j map[string]string) *bytes.Buffer {
 	b, err := json.Marshal(j)
 	log.Check(err)
 	return bytes.NewBuffer(b)
-}
-
-func (c *Client) Unregister(name string, t string) {
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/types/%s/packages/%s", Api, t, name), nil)
-	log.Check(err)
-
-	resp, err := c.http.Do(req)
-	log.Check(err)
-
-	fmt.Println(resp.Status)
 }
