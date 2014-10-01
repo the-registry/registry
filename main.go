@@ -17,6 +17,7 @@ const Api = "http://localhost:3000"
 const Usage = `
   Usage:
    registry search <type> <name>
+   registry show <type> <name>
    registry register <type> <name> <url>
    registry unregister <type> <name>
    registry -h | --help
@@ -40,6 +41,8 @@ func main() {
 
 	if args["search"].(bool) {
 		api.Search(name, t)
+	} else if args["show"].(bool) {
+		api.Show(name, t)
 	} else if args["register"].(bool) {
 		api.Register(name, args["<url>"].(string), t)
 	} else if args["unregister"].(bool) {
@@ -97,6 +100,27 @@ func (c *Client) Unregister(name string, t string) {
 	log.Check(err)
 
 	fmt.Printf("Unregistered %s package \"%s\"\n", t, name)
+}
+
+func (c *Client) Show(name string, t string) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/types/%s/packages/%s", Api, t, name), nil)
+	log.Check(err)
+
+	resp, err := c.http.Do(req)
+	log.Check(err)
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	log.Check(err)
+
+	var d interface{}
+	err = json.Unmarshal(body, &d)
+	log.Check(err)
+
+	b, err := json.MarshalIndent(d, "", "  ")
+	log.Check(err)
+
+	os.Stdout.Write(b)
 }
 
 func jsonBytes(j map[string]string) *bytes.Buffer {
