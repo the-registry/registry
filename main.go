@@ -61,8 +61,6 @@ func (c *Client) Search(name string, t string) {
 	resp, err := c.http.Do(req)
 	log.Check(err)
 
-	fmt.Println(resp.Status)
-
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	log.Check(err)
@@ -85,20 +83,20 @@ func (c *Client) Register(name string, u string, t string) {
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/types/%s/packages?%s", Api, t, p.Encode()), nil)
 	log.Check(err)
 
-	resp, err := c.http.Do(req)
+	_, err = c.http.Do(req)
 	log.Check(err)
 
-	fmt.Println(resp.Status)
+	fmt.Printf("Registered %s package \"%s\"\n", t, name)
 }
 
 func (c *Client) Unregister(name string, t string) {
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/types/%s/packages/%s", Api, t, name), nil)
 	log.Check(err)
 
-	resp, err := c.http.Do(req)
+	_, err = c.http.Do(req)
 	log.Check(err)
 
-	fmt.Println(resp.Status)
+	fmt.Printf("Unregistered %s package \"%s\"\n", t, name)
 }
 
 func jsonBytes(j map[string]string) *bytes.Buffer {
