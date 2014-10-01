@@ -3,6 +3,7 @@
 ```
 Usage:
  registry search <type> <name>
+ registry show <type> <name>
  registry register <type> <name> <url>
  registry unregister <type> <name>
  registry -h | --help
@@ -19,7 +20,7 @@ Options:
 $ registry register rubygem timecop https://github.com/travisjeffery/timecop.git
 > 201 Created
 
-$ register search rubygem timecop
+$ registry search rubygem timecop
 > 200 OK
 [
   {
