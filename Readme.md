@@ -17,16 +17,15 @@ Options:
 ## Example
 
 ```
-$ registry register rubygem timecop https://github.com/travisjeffery/timecop.git
-> 201 Created
+$ registry register duo moombahton https://github.com/travisjeffery/moombahton.git
+> Registered duo package "moombahton"
 
-$ registry search rubygem timecop
-> 200 OK
+$ registry search duo moombahton
 [
   {
-    "name": "timecop",
-    "type": "rubygem",
-    "url": "https://github.com/travisjeffery/timecop.git"
+    "name": "moombahton",
+    "type": "duo",
+    "url": "https://github.com/travisjeffery/moombahton.git"
   }
 ]
 ```
